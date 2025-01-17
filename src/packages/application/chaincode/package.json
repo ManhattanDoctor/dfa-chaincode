@@ -1,0 +1,20 @@
+{
+    "name": "@dfa/chaincode",
+    "version": "1.0.0",
+    "author": "Renat Gubaev",
+    "license": "ISC",
+    "description": "DFA chaincode",
+    "main": "index.js",
+    "scripts": {
+        "test": "ts-node --transpile-only test.ts",
+        "start": "CORE_CHAINCODE_LOGGING_LEVEL=INFO ts-node --transpile-only main.ts --chaincode-id-name='main_1.0.0:a1ea2b08d42cdc2ed5e4131644b8b969c6040a39314a17742c68d7336fc7f8d0' --peer.address grpc://127.0.0.1:7052",
+        "start-build": "CORE_CHAINCODE_LOGGING_LEVEL=INFO node build/src/packages/application/chaincode/main.js --chaincode-id-name='main_1.0.0:f2914cec6db733dcc2f8ad3f049a6a1008b9d676ad4e2933316f5398dd508e84' --peer.address grpc://127.0.0.1:7052",
+        "build": "tsc && cp -r build/node_modules build/src/node_modules && cp package-build.json build/package.json"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.2",
+        "ts-node-dev": "^2.0.0",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.7.3"
+    }
+}
