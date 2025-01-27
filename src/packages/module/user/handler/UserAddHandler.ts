@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { TransformUtil, Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
 import { UserAddCommand, IUserAddDto, UserAddDto } from '@project/common/hlf/transport';
-import { StubHolder, userRolesCheck } from '@hlf-core/transport-chaincode';
-import { User, UserRole } from '@project/common/hlf';
+import { StubHolder } from '@hlf-core/transport-chaincode';
+import { User, UserRole } from '@project/common/hlf/user';
 import { UserService } from '../service';
-import * as _ from 'lodash';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UserAddHandler extends TransportCommandAsyncHandler<IUserAddDto, User, UserAddCommand> {
@@ -27,7 +27,6 @@ export class UserAddHandler extends TransportCommandAsyncHandler<IUserAddDto, Us
 
     @UserGuard()
     protected async execute(params: IUserAddDto, @StubHolder() holder: IUserStubHolder): Promise<User> {
-        await userRolesCheck(holder, UserRole.USER_MANAGER);
         return this.service.add(holder, params);
     }
 

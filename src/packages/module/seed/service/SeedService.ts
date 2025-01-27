@@ -32,7 +32,7 @@ export class SeedService extends Seeder<ISeed, IUserStubHolder> {
         await this.user.seed(holder);
 
         this.log(`Adding seed ${Variables.seed.coin.coinId}" coin...`);
-        await this.coin.addRoot(holder);
+        await this.coin.seed(holder);
         return TransformUtil.toClass(Seed, { created: holder.stub.transaction.date });
     }
 

@@ -3,12 +3,12 @@ import { Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import { SeedService } from '../service';
 import { StubHolder } from '@hlf-core/transport-chaincode';
-import { GenesisGetCommand } from '@project/common/hlf/transport';
+import { SeedGetCommand } from '@project/common/hlf/transport';
 import { ISeed } from '@project/common/hlf';
 import * as _ from 'lodash';
 
 @Injectable()
-export class SeedGetHandler extends TransportCommandAsyncHandler<void, ISeed, GenesisGetCommand> {
+export class SeedGetHandler extends TransportCommandAsyncHandler<void, ISeed, SeedGetCommand> {
     // --------------------------------------------------------------------------
     //
     //  Constructor
@@ -16,7 +16,7 @@ export class SeedGetHandler extends TransportCommandAsyncHandler<void, ISeed, Ge
     // --------------------------------------------------------------------------
 
     constructor(logger: Logger, transport: Transport, private service: SeedService) {
-        super(logger, transport, GenesisGetCommand.NAME);
+        super(logger, transport, SeedGetCommand.NAME);
     }
 
     // --------------------------------------------------------------------------

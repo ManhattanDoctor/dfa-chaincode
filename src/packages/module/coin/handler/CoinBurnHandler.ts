@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
-import { StubHolder, userRolesCheck } from '@hlf-core/transport-chaincode';
-import { UserRole } from '@project/common/hlf';
-import { CoinBurnCommand, ICoinEmitDto } from '@project/common/hlf/transport';
-import { IUserStubHolder, UserGuard } from '../../guard';
+import { StubHolder } from '@hlf-core/transport-chaincode';
+import { CoinBurnCommand, ICoinEmitDto } from '@hlf-core/coin';
+import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import { CoinService } from '../service';
 import * as _ from 'lodash';
 
@@ -27,7 +26,6 @@ export class CoinBurnHandler extends TransportCommandAsyncHandler<ICoinEmitDto, 
 
     @UserGuard()
     protected async execute(params: ICoinEmitDto, @StubHolder() holder: IUserStubHolder): Promise<void> {
-        await userRolesCheck(holder, UserRole.USER_MANAGER);
         await this.service.burn(holder, params);
     }
 }

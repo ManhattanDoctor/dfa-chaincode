@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { TransformUtil, Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
 import { StubHolder } from '@hlf-core/transport-chaincode';
 import { CoinService } from '../service';
-import { CoinBalanceGetCommand, ICoinBalanceGetDto } from '@project/common/hlf/auction/transport';
-import { CoinBalance } from '@project/common/hlf/auction';
-import { UserGuard, IUserStubHolder } from '../../guard';
+import { CoinBalance, CoinBalanceGetCommand, ICoinBalanceGetDto } from '@hlf-core/coin';
+import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import * as _ from 'lodash';
 
 @Injectable()

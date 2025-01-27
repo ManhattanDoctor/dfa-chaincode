@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { TransformUtil, Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
-import { Coin } from '@hlf-core/common';
-import { StubHolder, CoinManager } from '@hlf-core/transport-chaincode';
-import { CoinGetCommand, ICoinGetDto } from '@project/common/hlf/auction/transport';
-import { IUserStubHolder, UserGuard } from '../../guard';
-import { CoinNotFoundError } from '@project/common/hlf/auction';
+import { StubHolder } from '@hlf-core/transport-chaincode';
+import { Coin, CoinGetCommand, ICoinGetDto } from '@hlf-core/coin';
+import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
+import { CoinService } from '../service';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -15,7 +14,7 @@ export class CoinGetHandler extends TransportCommandAsyncHandler<ICoinGetDto, Co
     //
     // --------------------------------------------------------------------------
 
-    constructor(logger: Logger, transport: Transport) {
+    constructor(logger: Logger, transport: Transport, private service: CoinService) {
         super(logger, transport, CoinGetCommand.NAME);
     }
 
@@ -27,11 +26,8 @@ export class CoinGetHandler extends TransportCommandAsyncHandler<ICoinGetDto, Co
 
     @UserGuard({ isNeedCheck: false })
     protected async execute(params: ICoinGetDto, @StubHolder() holder: IUserStubHolder): Promise<Coin> {
-        let item = await new CoinManager(this.logger, holder.stub).get(params.uid, params.details);
-        if (_.isNil(item)) {
-            throw new CoinNotFoundError(params.uid);
-        }
-        return item;
+        // return this.service.get(params.uid, params.details);
+        return null;
     }
 
     protected checkResponse(response: Coin): Coin {

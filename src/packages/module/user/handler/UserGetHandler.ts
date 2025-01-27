@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
 import { StubHolder } from '@hlf-core/transport-chaincode';
-import { IUserGetDto, UserGetCommand } from '@project/common/hlf/acl/transport';
-import { User } from '@project/common/hlf/acl';
+import { IUserGetDto, UserGetCommand } from '@project/common/hlf/transport';
+import { User } from '@project/common/hlf/user';
 import { UserService } from '../service';
+import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import * as _ from 'lodash';
 
 @Injectable()

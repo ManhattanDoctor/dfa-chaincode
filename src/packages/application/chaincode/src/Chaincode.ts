@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@ts-core/common';
 import { SeedService } from '@project/module/seed/service';
-import { TransportFabricChaincodeReceiver, SeededChaincode } from '@hlf-core/transport-chaincode';
+import { TransportFabricChaincodeReceiver, TransportFabricSeededChaincode } from '@hlf-core/transport-chaincode';
 import * as _ from 'lodash';
 
 @Injectable()
-export class Chaincode extends SeededChaincode<SeedService> {
+export class Chaincode extends TransportFabricSeededChaincode<SeedService> {
     // --------------------------------------------------------------------------
     //
     // 	Constructor

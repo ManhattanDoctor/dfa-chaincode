@@ -1,6 +1,7 @@
-import { User } from '@project/common/hlf';
-import { EntityManagerImpl, IStub } from '@hlf-core/transport-chaincode';
-import { UID, getUid, ILogger, CryptoKey, ICryptoKey } from '@hlf-core/common';
+import { User } from '@project/common/hlf/user';
+import { EntityManagerImpl, IStub } from '@hlf-core/chaincode';
+import { UID, getUid, ILogger, TransformUtil } from '@ts-core/common';
+import { CryptoKey, ICryptoKey } from '@hlf-core/common';
 import * as _ from 'lodash';
 
 export class UserManager extends EntityManagerImpl<User> {
@@ -12,7 +13,7 @@ export class UserManager extends EntityManagerImpl<User> {
     // --------------------------------------------------------------------------
 
     constructor(logger: ILogger, stub: IStub) {
-        super(logger, stub, User)
+        super(logger, stub)
     }
 
     // --------------------------------------------------------------------------
@@ -29,6 +30,10 @@ export class UserManager extends EntityManagerImpl<User> {
         if (_.isNil(item.cryptoKey) && details.includes('cryptoKey')) {
             item.cryptoKey = await this.cryptoKeyGet(item);
         }
+    }
+
+    public toEntity(item: any): User {
+        return TransformUtil.toClass(User, item);
     }
 
     public async remove(item: UID): Promise<void> {
@@ -59,7 +64,7 @@ export class UserManager extends EntityManagerImpl<User> {
 
     public async cryptoKeySet(user: UID, item: ICryptoKey): Promise<void> {
         if (!_.isNil(user) && !_.isNil(item)) {
-            await this.stub.putState(this.getCryptoKeyUid(user), item, { isValidate: true, isTransform: true, isSortKeys: true });
+            await this.stub.putState(this.getCryptoKeyUid(user), TransformUtil.toClass(CryptoKey, item), { isValidate: true, isTransform: true, isSortKeys: true });
         }
     }
 

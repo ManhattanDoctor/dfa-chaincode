@@ -1,6 +1,6 @@
 import { getStubHolder } from '@hlf-core/transport-chaincode';
-import { UserCryptoKeyInvalidError, UserCryptoKeyNotFoundError, UserStatus } from '@project/common/hlf';
-import { UserStatusForbiddenError, UserNotFoundError } from '@project/common/hlf';
+import { UserStatusForbiddenError, UserNotFoundError, UserCryptoKeyInvalidError, UserCryptoKeyNotFoundError } from '@project/common/hlf';
+import { UserStatus } from '@project/common/hlf/user';
 import { UserManager } from '@project/module/core/database';
 import { IUserStubHolder } from './IUserStubHolder';
 import * as _ from 'lodash';

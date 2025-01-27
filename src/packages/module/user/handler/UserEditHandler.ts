@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Logger, Transport, TransformUtil, TransportCommandAsyncHandler } from '@ts-core/common';
 import { UserEditCommand, IUserEditDto, UserEditDto } from '@project/common/hlf/transport';
-import { User, UserRole } from '@project/common/hlf';
-import { StubHolder, userRolesCheck } from '@hlf-core/transport-chaincode';
+import { User, UserRole } from '@project/common/hlf/user';
+import { StubHolder } from '@hlf-core/transport-chaincode';
 import { UserService } from '../service';
-import * as _ from 'lodash';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UserEditHandler extends TransportCommandAsyncHandler<IUserEditDto, User, UserEditCommand> {
@@ -27,7 +27,6 @@ export class UserEditHandler extends TransportCommandAsyncHandler<IUserEditDto, 
 
     @UserGuard()
     protected async execute(params: IUserEditDto, @StubHolder() holder: IUserStubHolder): Promise<User> {
-        await userRolesCheck(holder, UserRole.USER_MANAGER);
         return this.service.edit(holder, params);
     }
 

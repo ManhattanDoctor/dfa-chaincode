@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Logger, LoggerWrapper, ObjectUtil } from '@ts-core/common';
+import { Logger, LoggerWrapper, TransformUtil } from '@ts-core/common';
 import { Variables } from '@project/common/hlf';
-import { User, UserRole } from '@project/common/hlf';
+import { UserStatus, User, UserRole } from '@project/common/hlf/user';
 import { UserAlreadyExistsError, UserNotFoundError } from '@project/common/hlf';
 import { IUserAddDto, IUserEditDto, IUserGetDto, UserAddedEvent, UserEditedEvent } from '@project/common/hlf/transport';
 import { IUserStubHolder } from '@project/module/core/guard';
-import { SignatureInvalidError } from '@hlf-core/transport-chaincode';
+import { CryptoKey, UserUtil } from '@hlf-core/common';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -36,36 +36,19 @@ export class UserService extends LoggerWrapper {
     }
 
     public async add(holder: IUserStubHolder, params: IUserAddDto): Promise<User> {
-        /*
-        let address = EthereumUtil.getAddressFromSignature(params.signature);
-        if (!EthereumUtil.isAddressesEqual(address, params.signature.publicKey)) {
-            throw new SignatureInvalidError(`Invalid signature for address "${address}"`);
+        let item = UserUtil.create(User, holder.stub.transaction.date, holder.stub.transaction.hash);
+        if (await holder.stub.hasState(item.uid)) {
+            throw new UserAlreadyExistsError(item);
         }
-
-        let uid = User.createUid(address);
-        if (await holder.stub.hasState(uid)) {
-            throw new UserAlreadyExistsError(address);
-        }
-        if (!(await holder.manager.has(params.inviterUid))) {
-            throw new UserNotFoundError(params.inviterUid);
-        }
-        let item = User.create(address, params.inviterUid, holder.stub.transaction.date);
-        ObjectUtil.copyPartial(params, item, ['wallet', 'roles']);
+        item.roles = params.roles;
+        item.status = UserStatus.ACTIVE;
         await holder.manager.save(item);
+
+        let cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
+        await holder.manager.cryptoKeySet(item, cryptoKey);
+
         await holder.stub.dispatch(new UserAddedEvent(item));
         return item;
-        */
-       return null;
-    }
-
-    public async seed(holder: IUserStubHolder): Promise<void> {
-        /*
-        let item = User.create(Variables.root.address, Variables.platform.uid, created);
-        root.roles = Object.values(UserRole);
-        await holder.manager.save(root);
-
-        await holder.stub.dispatch(new UserAddedEvent(root));
-        */
     }
 
     public async edit(holder: IUserStubHolder, params: IUserEditDto): Promise<User> {
@@ -82,5 +65,17 @@ export class UserService extends LoggerWrapper {
         await holder.manager.save(item);
         await holder.stub.dispatch(new UserEditedEvent({ userUid: item.uid }));
         return item;
+    }
+
+    public async seed(holder: IUserStubHolder): Promise<void> {
+        let item = Variables.seed.user;
+        item.roles = Object.values(UserRole);
+        item.status = UserStatus.ACTIVE;
+        await holder.manager.save(item);
+
+        let cryptoKey = TransformUtil.toClass(CryptoKey, Variables.seed.user.cryptoKey);
+        await holder.manager.cryptoKeySet(item, cryptoKey);
+
+        await holder.stub.dispatch(new UserAddedEvent(item));
     }
 }

@@ -9,7 +9,9 @@
         "start": "node ./src/packages/application/chaincode/main.js"
     },
     "dependencies": {
-        "@hlf-core/transport-chaincode": "~3.5.8",
-        "@ts-core/backend-nestjs": "~10.0.6"
+        "@ts-core/backend-nestjs": "~10.0.6",
+
+        "@hlf-core/coin": "~3.2.10",
+        "@hlf-core/transport-chaincode": "~3.6.4"
     }
 }
