@@ -1,4 +1,4 @@
-import { Logger, LoggerLevel } from '@ts-core/common';
+import { Logger, LoggerLevel, ValidateUtil } from '@ts-core/common';
 import { DynamicModule, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { TransportFabricChaincodeModule } from '@project/module/core/transport';
 import { LoggerModule } from '@ts-core/backend-nestjs';
@@ -10,6 +10,12 @@ import { MetadataGetHandler, NonceGetHandler } from './handler';
 import { UserModule } from '@project/module/user';
 import { CoinModule } from '@project//module/coin';
 import { SeedModule } from '@project//module/seed';
+import { CoinService } from '@project/module/coin/service';
+import { CoinType } from '@project/common/hlf/coin';
+import { Variables } from '@project/common/hlf';
+
+import { CoinBalance, ICoinBalance } from "@hlf-core/coin";
+import { CoinPermissionType } from '@project/common/hlf/coin/permission';
 
 @Injectable()
 export class AppModule extends ModeApplication implements OnApplicationBootstrap {
@@ -47,7 +53,7 @@ export class AppModule extends ModeApplication implements OnApplicationBootstrap
     //
     // --------------------------------------------------------------------------
 
-    public constructor(logger: Logger, settings: AppSettings, chaincode: Chaincode) {
+    public constructor(logger: Logger, settings: AppSettings, chaincode: Chaincode, private coin: CoinService) {
         super(chaincode.name, settings, logger);
         chaincode.internalLoggerLevel = LoggerLevel.NONE;
     }
@@ -58,7 +64,27 @@ export class AppModule extends ModeApplication implements OnApplicationBootstrap
     //
     // --------------------------------------------------------------------------
 
-    private async initialize(): Promise<void> { }
+    private async initialize(): Promise<void> {
+        let data = {
+            name: 'Renat',
+            type: 'LOAN'
+        };
+        let permissions = [
+            { type: CoinPermissionType.AMOUNT, minimum: '10' },
+            { type: CoinPermissionType.WHITELIST, objects: ['asaasdasd'] },
+            { type: CoinPermissionType.BLACKLIST, objects: ['asad'] }
+        ];
+
+        let item = this.coin.create({ type: CoinType.NFT, ticker: 'FLAT' }, Variables.seed.coin.decimals, Variables.seed.coin.ownerUid, permissions, data);
+        console.log(item);
+        try {
+            console.log(ValidateUtil.validate(item));
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    }
 
     // --------------------------------------------------------------------------
     //
