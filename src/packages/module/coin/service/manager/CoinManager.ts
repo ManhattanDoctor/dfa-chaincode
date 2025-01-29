@@ -12,8 +12,10 @@ export class CoinManager<T extends ICoin> extends CoinManagerBase<T> {
     // --------------------------------------------------------------------------
 
     protected async validate(item: ICoinAccountDetails<T>, amount: string): Promise<void> {
-        for (let permission of item.coin?.permissions) {
-            await CoinValidatorFactory.create(permission).validate(permission, item.coin, item.account, amount);
+        if (!_.isEmpty(item.coin.permissions)) {
+            for (let permission of item.coin.permissions) {
+                await CoinValidatorFactory.create(permission).validate(permission, item.coin, item.account, amount);
+            }
         }
     }
 

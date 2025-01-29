@@ -1,32 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { TransformUtil, Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
-import { UserAddCommand, IUserAddDto, UserAddDto } from '@project/common/hlf/transport';
+import { Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
 import { StubHolder } from '@hlf-core/transport-chaincode';
-import { User, UserRole } from '@project/common/hlf/user';
-import { UserService } from '../service';
+import { CoinService } from '../service';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
+import { CoinAddCommand, ICoinAddDto } from '@project/common/hlf/transport';
+import { Coin } from '@project/common/hlf/coin';
 import * as _ from 'lodash';
 
 @Injectable()
-export class UserAddHandler extends TransportCommandAsyncHandler<IUserAddDto, User, UserAddCommand> {
+export class CoinAddHandler extends TransportCommandAsyncHandler<ICoinAddDto, Coin, CoinAddCommand> {
     // --------------------------------------------------------------------------
     //
     //  Constructor
     //
     // --------------------------------------------------------------------------
 
-    constructor(logger: Logger, transport: Transport, private service: UserService) {
-        super(logger, transport, UserAddCommand.NAME);
+    constructor(logger: Logger, transport: Transport, private service: CoinService) {
+        super(logger, transport, CoinAddCommand.NAME);
     }
 
     // --------------------------------------------------------------------------
     //
-    //  Private Methods
+    //  Protected Methods
     //
     // --------------------------------------------------------------------------
 
     @UserGuard()
-    protected async execute(params: IUserAddDto, @StubHolder() holder: IUserStubHolder): Promise<User> {
+    protected async execute(params: ICoinAddDto, @StubHolder() holder: IUserStubHolder): Promise<Coin> {
+        params.ownerUid = holder.user.uid;
         return this.service.add(holder, params);
     }
 }

@@ -1,3 +1,4 @@
+import { ILogger } from '@ts-core/common';
 import { getStubHolder } from '@hlf-core/transport-chaincode';
 import { UserStatusForbiddenError, UserNotFoundError, UserCryptoKeyInvalidError, UserCryptoKeyNotFoundError } from '@project/common/hlf';
 import { UserStatus } from '@project/common/hlf/user';
@@ -18,8 +19,8 @@ export const UserGuard = (options?: IUserGuardOptions): any => {
         }
         let originalMethod = descriptor.value;
         descriptor.value = async function (...args): Promise<any> {
-            let holder = await getUserStubHolder(target, args);
-            await validateUserStubHolder(holder, options);
+            let holder = await getUserStubHolder(this.logger, target, args);
+            await validateUserStubHolder(this.logger, holder, options);
             return originalMethod.apply(this, args);
         };
     };
@@ -35,7 +36,7 @@ interface IUserGuardOptions {
     isNeedCheck?: boolean;
 }
 
-async function validateUserStubHolder<U>(item: IUserStubHolder<U>, options: IUserGuardOptions): Promise<void> {
+async function validateUserStubHolder<U>(logger: ILogger, item: IUserStubHolder<U>, options: IUserGuardOptions): Promise<void> {
     if (_.isEmpty(options) || !options.isNeedCheck) {
         return;
     }
@@ -43,7 +44,7 @@ async function validateUserStubHolder<U>(item: IUserStubHolder<U>, options: IUse
     let { id } = item.stub.user;
     let { user } = item;
     if (_.isNil(user)) {
-        item.manager = new UserManager(this.logger, item.stub)
+        item.manager = new UserManager(logger, item.stub)
         item.user = user = await item.manager.get(id, ['cryptoKey']);
     }
     if (_.isNil(user)) {
@@ -62,7 +63,7 @@ async function validateUserStubHolder<U>(item: IUserStubHolder<U>, options: IUse
     }
 }
 
-async function getUserStubHolder<U>(target: any, args: Array<any>): Promise<IUserStubHolder<U>> {
+async function getUserStubHolder<U>(logger: ILogger, target: any, args: Array<any>): Promise<IUserStubHolder<U>> {
     let holder = getStubHolder(target, args) as IUserStubHolder<U>;
     let destroyAsync = holder.destroyAsync;
     holder.destroyAsync = async (): Promise<void> => {

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CoinGetHandler, CoinBalanceGetHandler, CoinEmitHandler, CoinBurnHandler, CoinTransferHandler } from './handler';
+import { CoinGetHandler, CoinAddHandler, CoinBalanceGetHandler, CoinEmitHandler, CoinBurnHandler, CoinTransferHandler } from './handler';
 import { CoinService } from './service';
 
 @Module({
     controllers: [
         CoinGetHandler,
+        CoinAddHandler,
         CoinEmitHandler,
         CoinBurnHandler,
         CoinTransferHandler,

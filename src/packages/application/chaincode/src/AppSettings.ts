@@ -3,8 +3,8 @@ import { DateUtil, TransportCryptoManagerEd25519, AbstractSettingsStorage, ITran
 import { LoggerSettings } from '@ts-core/backend';
 import { ChaincodeMetadataGetCommand, ChaincodeMode } from '@hlf-core/transport-common';
 import { ChaincodeServerOpts } from 'fabric-shim';
-import * as _ from 'lodash';
 import { NON_SIGNED_COMMANDS } from '@project/common/hlf/transport';
+import * as _ from 'lodash';
 
 export class AppSettings extends LoggerSettings implements ITransportFabricChaincodeSettingsBatch {
     // --------------------------------------------------------------------------
@@ -61,7 +61,7 @@ export class AppSettings extends LoggerSettings implements ITransportFabricChain
     // --------------------------------------------------------------------------
 
     public get isBatch(): boolean {
-        return AbstractSettingsStorage.parseBoolean(this.getValue('FABRIC_IS_BATCH', true));
+        return AbstractSettingsStorage.parseBoolean(this.getValue('FABRIC_IS_BATCH', false));
     }
 
     public get batch(): ITransportFabricSettingsBatch {

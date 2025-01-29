@@ -65,6 +65,7 @@ export class AppModule extends ModeApplication implements OnApplicationBootstrap
     // --------------------------------------------------------------------------
 
     private async initialize(): Promise<void> {
+        /*
         let data = {
             name: 'Renat',
             type: 'LOAN'
@@ -83,7 +84,7 @@ export class AppModule extends ModeApplication implements OnApplicationBootstrap
         catch (error) {
             console.log(error);
         }
-
+        */
     }
 
     // --------------------------------------------------------------------------
