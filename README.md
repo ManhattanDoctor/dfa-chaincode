@@ -1,2 +1,2 @@
-# dfa-chaincode-acl
+# dfa-chaincode
 Chaincode for DFA

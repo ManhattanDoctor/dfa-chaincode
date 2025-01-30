@@ -11,7 +11,7 @@
     "dependencies": {
         "@ts-core/backend-nestjs": "~10.0.6",
 
-        "@hlf-core/coin": "~3.2.10",
-        "@hlf-core/transport-chaincode": "~3.6.4"
+        "@hlf-core/coin-chaincode": "~3.6.1",
+        "@hlf-core/transport-chaincode": "~3.6.5"
     }
 }

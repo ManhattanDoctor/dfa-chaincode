@@ -44,7 +44,7 @@ export class UserService extends LoggerWrapper {
         item.status = UserStatus.ACTIVE;
         await holder.manager.save(item);
 
-        let cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
+        let cryptoKey = item.cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
         await holder.manager.cryptoKeySet(item, cryptoKey);
 
         await holder.stub.dispatch(new UserAddedEvent(item));

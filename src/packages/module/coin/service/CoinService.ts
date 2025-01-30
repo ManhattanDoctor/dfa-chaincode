@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CoinUtil as CoinUtilBase } from '@hlf-core/coin';
-import { Logger, UID } from '@ts-core/common';
+import { Logger } from '@ts-core/common';
 import { CoinEmittedEvent, } from '@hlf-core/coin';
 import { IStub } from '@hlf-core/chaincode';
-import { CoinAlreadyExistsError, CoinService as CoinServiceBase, ICoinManager } from '@hlf-core/coin-chaincode';
+import { CoinAlreadyExistsError, CoinService as CoinServiceBase} from '@hlf-core/coin-chaincode';
 import { Variables } from '@project/common/hlf';
 import { ICoin, CoinUtil, CoinType, CoinFactory, Coin } from '@project/common/hlf/coin';
 import { IUserStubHolder } from '@project/module/core/guard';
-import { CoinManager, CoinManagerNFT } from './manager';
+import { CoinManager, CoinManagerNFT, ICoinManager } from './manager';
 import { CoinAddedEvent, ICoinAddDto } from '@project/common/hlf/transport';
 import * as _ from 'lodash';
 
@@ -38,7 +38,7 @@ export class CoinService extends CoinServiceBase<IUserStubHolder> {
 
         let item = CoinFactory.transform({ uid, data, permissions, balance: { held: '0', inUse: '0', burned: '0', emitted: '0' } });
         let manager = this.getManager(holder.stub, item.uid);
-        await manager.save(item);
+        await manager.add(item);
         await holder.stub.dispatch(new CoinAddedEvent(item));
 
         if (!_.isNil(emit)) {
