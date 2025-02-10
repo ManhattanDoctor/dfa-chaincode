@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { TransformUtil, Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
-import { UserAddCommand, IUserAddDto, UserAddDto } from '@project/common/hlf/transport';
+import { Logger, Transport, TransportCommandAsyncHandler } from '@ts-core/common';
+import { UserAddCommand, IUserAddDto } from '@project/common/hlf/transport';
 import { StubHolder } from '@hlf-core/transport-chaincode';
-import { User, UserRole } from '@project/common/hlf/user';
+import { User } from '@project/common/hlf/user';
 import { UserService } from '../service';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import * as _ from 'lodash';
