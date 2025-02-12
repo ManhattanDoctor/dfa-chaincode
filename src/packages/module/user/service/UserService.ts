@@ -6,6 +6,8 @@ import { UserAlreadyExistsError, UserNotFoundError } from '@project/common/hlf';
 import { IUserAddDto, IUserEditDto, IUserGetDto, UserAddedEvent, UserEditedEvent } from '@project/common/hlf/transport';
 import { IUserStubHolder } from '@project/module/core/guard';
 import { CryptoKey, UserUtil } from '@hlf-core/common';
+import { IStubHolder } from '@hlf-core/chaincode';
+import { UserManager } from '@project/module/core/database';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -28,7 +30,7 @@ export class UserService extends LoggerWrapper {
     // --------------------------------------------------------------------------
 
     public async get(holder: IUserStubHolder, params: IUserGetDto): Promise<User> {
-        let item = await holder.manager.get(params.uid, params.details);
+        let item = await this.getManager(holder).get(params.uid, params.details);
         if (_.isNil(item)) {
             throw new UserNotFoundError(params.uid);
         }
@@ -42,17 +44,17 @@ export class UserService extends LoggerWrapper {
         }
         item.roles = params.roles;
         item.status = UserStatus.ACTIVE;
-        await holder.manager.save(item);
+        await this.getManager(holder).save(item);
 
         let cryptoKey = item.cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
-        await holder.manager.cryptoKeySet(item, cryptoKey);
+        await this.getManager(holder).cryptoKeySet(item, cryptoKey);
 
         await holder.stub.dispatch(new UserAddedEvent(item));
         return item;
     }
 
     public async edit(holder: IUserStubHolder, params: IUserEditDto): Promise<User> {
-        let item = await holder.manager.get(params.uid);
+        let item = await this.getManager(holder).get(params.uid);
         if (_.isNil(item)) {
             throw new UserNotFoundError(params.uid);
         }
@@ -64,9 +66,9 @@ export class UserService extends LoggerWrapper {
         }
         if (!_.isNil(params.cryptoKey)) {
             let cryptoKey = item.cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
-            await holder.manager.cryptoKeySet(item, cryptoKey);
+            await this.getManager(holder).cryptoKeySet(item, cryptoKey);
         }
-        await holder.manager.save(item);
+        await this.getManager(holder).save(item);
         await holder.stub.dispatch(new UserEditedEvent({ userUid: item.uid }));
         return item;
     }
@@ -75,11 +77,24 @@ export class UserService extends LoggerWrapper {
         let item = Variables.seed.user;
         item.roles = Object.values(UserRole);
         item.status = UserStatus.ACTIVE;
-        await holder.manager.save(item);
+        await this.getManager(holder).save(item);
 
         let cryptoKey = TransformUtil.toClass(CryptoKey, Variables.seed.cryptoKey);
-        await holder.manager.cryptoKeySet(item, cryptoKey);
+        await this.getManager(holder).cryptoKeySet(item, cryptoKey);
 
         await holder.stub.dispatch(new UserAddedEvent(item));
+    }
+
+    // --------------------------------------------------------------------------
+    //
+    //  Private Methods
+    //
+    // --------------------------------------------------------------------------
+
+    private getManager(holder: IUserStubHolder): UserManager {
+        if (_.isNil(holder.manager)) {
+            holder.manager = new UserManager(this.logger, holder.stub);
+        }
+        return holder.manager;
     }
 }

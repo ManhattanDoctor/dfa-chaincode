@@ -40,7 +40,6 @@ async function validateUserStubHolder<U>(logger: ILogger, item: IUserStubHolder<
     if (_.isEmpty(options) || !options.isNeedCheck) {
         return;
     }
-
     let { id } = item.stub.user;
     let { user } = item;
     if (_.isNil(user)) {

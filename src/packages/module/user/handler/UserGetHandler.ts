@@ -6,6 +6,7 @@ import { User } from '@project/common/hlf/user';
 import { UserService } from '../service';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
 import * as _ from 'lodash';
+import { UserManager } from '@project/module/core/database';
 
 @Injectable()
 export class UserGetHandler extends TransportCommandAsyncHandler<IUserGetDto, User, UserGetCommand> {
