@@ -4,7 +4,6 @@ import { StubHolder } from '@hlf-core/transport-chaincode';
 import { CoinEmitCommand, ICoinEmitDto } from '@hlf-core/coin';
 import { CoinService } from '../service';
 import { IUserStubHolder, UserGuard } from '@project/module/core/guard';
-import { UserRole } from '@project/common/hlf/user';
 import * as _ from 'lodash';
 
 @Injectable()

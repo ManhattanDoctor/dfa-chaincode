@@ -7,7 +7,7 @@
     "main": "index.js",
     "scripts": {
         "test": "ts-node --transpile-only test.ts",
-        "start": "CORE_CHAINCODE_LOGGING_LEVEL=INFO ts-node --transpile-only main.ts --chaincode-id-name='main_1.0.0:9304b602bf12b37c6f2be6a7da95db0a9e26b8ddfb406a4e8e4770f49bfcb3d3' --peer.address grpc://127.0.0.1:7052",
+        "start": "CORE_CHAINCODE_LOGGING_LEVEL=INFO ts-node --transpile-only main.ts --chaincode-id-name='main_1.0.0:449ed95248717d883fd5f7fb7f4b6de0471f7839a09624ec6b83b3e8cfa7cec8' --peer.address grpc://127.0.0.1:7052",
         "start-build": "CORE_CHAINCODE_LOGGING_LEVEL=INFO node build/src/packages/application/chaincode/main.js --chaincode-id-name='main_1.0.0:f2914cec6db733dcc2f8ad3f049a6a1008b9d676ad4e2933316f5398dd508e84' --peer.address grpc://127.0.0.1:7052",
         "build": "tsc && cp -r build/node_modules build/src/node_modules && cp package-build.json build/package.json"
     },

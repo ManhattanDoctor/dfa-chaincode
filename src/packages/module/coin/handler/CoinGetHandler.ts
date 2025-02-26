@@ -26,8 +26,7 @@ export class CoinGetHandler extends TransportCommandAsyncHandler<ICoinGetDto, Co
 
     @UserGuard({ isNeedCheck: false })
     protected async execute(params: ICoinGetDto, @StubHolder() holder: IUserStubHolder): Promise<Coin> {
-        // return this.service.get(params.uid, params.details);
-        return null;
+        return this.service.get(holder, params);
     }
 
     protected checkResponse(response: Coin): Coin {

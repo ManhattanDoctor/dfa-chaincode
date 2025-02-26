@@ -3,7 +3,7 @@ import { CoinUtil as CoinUtilBase } from '@hlf-core/coin';
 import { Logger } from '@ts-core/common';
 import { CoinEmittedEvent, } from '@hlf-core/coin';
 import { IStub } from '@hlf-core/chaincode';
-import { CoinAlreadyExistsError, CoinService as CoinServiceBase} from '@hlf-core/coin-chaincode';
+import { CoinAlreadyExistsError, CoinService as CoinServiceBase } from '@hlf-core/coin-chaincode';
 import { Variables } from '@project/common/hlf';
 import { ICoin, CoinUtil, CoinType, CoinFactory, Coin } from '@project/common/hlf/coin';
 import { IUserStubHolder } from '@project/module/core/guard';
@@ -39,11 +39,11 @@ export class CoinService extends CoinServiceBase<IUserStubHolder> {
         let item = CoinFactory.transform({ uid, data, permissions, balance: { held: '0', inUse: '0', burned: '0', emitted: '0' } });
         let manager = this.getManager(holder.stub, item.uid);
         await manager.add(item);
-        await holder.stub.dispatch(new CoinAddedEvent(item));
+        await holder.stub.dispatch(new CoinAddedEvent({ coin: item, initiatorUid: params.initiatorUid }));
 
         if (!_.isNil(emit)) {
             await manager.emit(item, ownerUid, emit);
-            await holder.stub.dispatch(new CoinEmittedEvent({ coinUid: item.uid, objectUid: ownerUid, amount: emit }));
+            await holder.stub.dispatch(new CoinEmittedEvent({ coinUid: item.uid, objectUid: ownerUid, amount: emit, initiatorUid: params.initiatorUid }));
         }
         return item;
     }

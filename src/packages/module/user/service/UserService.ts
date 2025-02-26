@@ -49,7 +49,7 @@ export class UserService extends LoggerWrapper {
         let cryptoKey = item.cryptoKey = TransformUtil.toClass(CryptoKey, params.cryptoKey);
         await this.getManager(holder).cryptoKeySet(item, cryptoKey);
 
-        await holder.stub.dispatch(new UserAddedEvent(item));
+        await holder.stub.dispatch(new UserAddedEvent({ user: item, initiatorUid: params.initiatorUid }));
         return item;
     }
 
@@ -69,7 +69,7 @@ export class UserService extends LoggerWrapper {
             await this.getManager(holder).cryptoKeySet(item, cryptoKey);
         }
         await this.getManager(holder).save(item);
-        await holder.stub.dispatch(new UserEditedEvent({ userUid: item.uid }));
+        await holder.stub.dispatch(new UserEditedEvent({ userUid: item.uid, initiatorUid: params.initiatorUid }));
         return item;
     }
 
@@ -82,7 +82,7 @@ export class UserService extends LoggerWrapper {
         let cryptoKey = TransformUtil.toClass(CryptoKey, Variables.seed.cryptoKey);
         await this.getManager(holder).cryptoKeySet(item, cryptoKey);
 
-        await holder.stub.dispatch(new UserAddedEvent(item));
+        await holder.stub.dispatch(new UserAddedEvent({ user: item }));
     }
 
     // --------------------------------------------------------------------------
